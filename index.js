@@ -90,6 +90,7 @@ async function run() {
     const database = client.db("hj-hotels");
     const roomsCollection = database.collection("rooms");
     const reviewsCollection = database.collection("reviews");
+    const bookingsCollection = database.collection("bookings");
     // reading all rooms
     app.get("/rooms", async (req, res) => {
       const query = {
@@ -103,16 +104,28 @@ async function run() {
     });
     // reading single room
     app.get("/rooms/:id", async (req, res) => {
-      const result = await roomsCollection
-        .find({ _id: new ObjectId(req.params.id) })
-        .toArray();
-
+      const result = await roomsCollection.findOne({
+        _id: new ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
+    // updating rooms collection
+    app.patch("/rooms/:id", async (req, res) => {
+      const filter = { _id: new ObjectId(req.params.id) };
+      const updateRoom = {
+        $set: req.body,
+      };
+      const options = { upsert: true };
+      const result = await roomsCollection.updateOne(
+        filter,
+        updateRoom,
+        options
+      );
       res.send(result);
     });
     // reading all premium rooms
     app.get("/featuredrooms", async (req, res) => {
       const result = await roomsCollection.find({ featured: true }).toArray();
-
       res.send(result);
     });
     // reading all reviews by descending order
@@ -122,6 +135,11 @@ async function run() {
         .sort({ timestamp: -1 })
         .toArray();
 
+      res.send(result);
+    });
+    // craeting bookings
+    app.post("/bookings", async (req, res) => {
+      const result = await bookingsCollection.insertOne(req.body);
       res.send(result);
     });
   } finally {
