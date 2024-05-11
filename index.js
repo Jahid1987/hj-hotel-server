@@ -14,7 +14,12 @@ const port = process.env.PORT || 5000;
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://hj-hotel-b96ba.web.app/",
+      "https://hj-hotel-b96ba.firebaseapp.com/",
+    ],
     credentials: true,
   })
 );
@@ -82,7 +87,43 @@ async function run() {
     });
     // database related api will be here
     // Get the database and collection on which to run the operation
-    const database = client.db("carDoctorDB");
+    const database = client.db("hj-hotels");
+    const roomsCollection = database.collection("rooms");
+    const reviewsCollection = database.collection("reviews");
+    // reading all rooms
+    app.get("/rooms", async (req, res) => {
+      const query = {
+        status: req.query.status,
+        price: {
+          $lte: parseInt(req.query.price),
+        },
+      };
+      const result = await roomsCollection.find(query).toArray();
+      res.send(result);
+    });
+    // reading single room
+    app.get("/rooms/:id", async (req, res) => {
+      const result = await roomsCollection
+        .find({ _id: new ObjectId(req.params.id) })
+        .toArray();
+
+      res.send(result);
+    });
+    // reading all premium rooms
+    app.get("/featuredrooms", async (req, res) => {
+      const result = await roomsCollection.find({ featured: true }).toArray();
+
+      res.send(result);
+    });
+    // reading all reviews by descending order
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection
+        .find()
+        .sort({ timestamp: -1 })
+        .toArray();
+
+      res.send(result);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
