@@ -7,9 +7,6 @@ require("dotenv").config();
 
 const port = process.env.PORT || 5000;
 
-// BrNcamoBXneJrEZA
-// carDoctor
-
 // middleware package
 app.use(cookieParser());
 app.use(
@@ -140,6 +137,22 @@ async function run() {
     // craeting bookings
     app.post("/bookings", async (req, res) => {
       const result = await bookingsCollection.insertOne(req.body);
+      res.send(result);
+    });
+    // reading all bookings according to logged in and varified user
+    app.get("/bookings/:email", veryfyToken, async (req, res) => {
+      const query = {
+        user_email: req.params.email,
+      };
+      const result = await bookingsCollection.find(query).toArray();
+      res.send(result);
+    });
+    // deleting booking
+    app.delete("/bookings/:id", veryfyToken, async (req, res) => {
+      const query = {
+        _id: new ObjectId(req.params.id),
+      };
+      const result = await bookingsCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
