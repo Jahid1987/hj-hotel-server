@@ -123,6 +123,30 @@ async function run() {
     // reading all premium rooms
     app.get("/featuredrooms", async (req, res) => {
       const result = await roomsCollection.find({ featured: true }).toArray();
+      res.send([result]);
+    });
+
+    // creating reviews
+    app.post("/reviews", veryfyToken, async (req, res) => {
+      const review = req.body;
+      const filter = { _id: new ObjectId(req.body.roomId) };
+      const updateRoom = {
+        $push: {
+          reviews: {
+            user: review.user,
+            rating: review.rating,
+            comment: review.comment,
+          },
+        },
+      };
+      const options = { upsert: true };
+      console.log(filter, updateRoom, options);
+      await reviewsCollection.insertOne(req.body);
+      const result = await roomsCollection.updateOne(
+        filter,
+        updateRoom,
+        options
+      );
       res.send(result);
     });
     // reading all reviews by descending order
@@ -135,8 +159,22 @@ async function run() {
       res.send(result);
     });
     // craeting bookings
-    app.post("/bookings", async (req, res) => {
+    app.post("/bookings", veryfyToken, async (req, res) => {
       const result = await bookingsCollection.insertOne(req.body);
+      res.send(result);
+    });
+    // updating bookings
+    app.patch("/bookings/:id", veryfyToken, async (req, res) => {
+      const filter = { _id: new ObjectId(req.params.id) };
+      const updateRoom = {
+        $set: req.body,
+      };
+      const options = { upsert: true };
+      const result = await bookingsCollection.updateOne(
+        filter,
+        updateRoom,
+        options
+      );
       res.send(result);
     });
     // reading all bookings according to logged in and varified user
