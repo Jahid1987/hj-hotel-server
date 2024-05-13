@@ -14,8 +14,8 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      "https://hj-hotel-b96ba.web.app/",
-      "https://hj-hotel-b96ba.firebaseapp.com/",
+      "https://hj-hotel-b96ba.web.app",
+      "https://hj-hotel-b96ba.firebaseapp.com",
     ],
     credentials: true,
   })
@@ -123,7 +123,7 @@ async function run() {
     // reading all premium rooms
     app.get("/featuredrooms", async (req, res) => {
       const result = await roomsCollection.find({ featured: true }).toArray();
-      res.send([result]);
+      res.send(result);
     });
 
     // creating reviews
