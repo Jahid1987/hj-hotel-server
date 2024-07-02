@@ -13,7 +13,7 @@
 
 ## 🛠 Main Technologies used
 
-- ![React](https://img.shields.io/badge/-React-61DAFB?style=flat&logo=react&logoColor=white)
+- ![Express](https://img.shields.io/badge/-Express-000000?style=flat&logo=express&logoColor=white)
 - ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)
 
 - jwt is used
