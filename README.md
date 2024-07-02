@@ -14,7 +14,7 @@
 ## 🛠 Main Technologies used
 
 - ![Express](https://img.shields.io/badge/-Express-000000?style=flat&logo=express&logoColor=white)
-- ![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)
+- ![MongoDB](https://img.shields.io/badge/-MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
 
 - jwt is used
 
